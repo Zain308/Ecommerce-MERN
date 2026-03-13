@@ -1,0 +1,59 @@
+/* 1. All imports MUST go at the very top */
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+/* 2. Tailwind Theme configuration */
+@theme {
+  /* Matching the instructor's custom breakpoints */
+  --breakpoint-1000px: 1050px;
+  --breakpoint-1100px: 1110px;
+  --breakpoint-800px: 800px;
+  --breakpoint-1300px: 1300px;
+  --breakpoint-400px: 400px;
+
+  /* Matching the instructor's custom fonts */
+  --font-roboto: "Roboto", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+}
+
+/* 3. Global CSS Rules */
+*{
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    background: #F6F6F5;
+    scroll-behavior: smooth;
+}
+
+input, select{
+  outline: none;
+}
+
+.batch_heart{
+  background: tomato;
+  width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  position: absolute;
+  right: -24%;
+  top: -9%;
+  cursor: pointer;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
