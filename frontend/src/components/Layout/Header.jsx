@@ -11,6 +11,7 @@ import { CgProfile } from 'react-icons/cg';
 import { useSelector } from "react-redux";
 import { backend_url } from "../../server.jsx";
 import Cart from "../cart/Cart.jsx"
+import Wishlist from "../Wishlist/Wishlist.jsx"
 
 export const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -130,7 +131,9 @@ export const Header = ({ activeHeading }) => {
             <div className="flex">
               <div className={`${styles.noramlFlex}`}>
                 
-                <div className="relative cursor-pointer mr-[15px]">
+                <div className="relative cursor-pointer mr-[15px]"
+                onClick={()=>setOpenWishlist(true)}
+                >
                   <AiOutlineHeart
                     size={30}
                     color="rgb(255 255 255 / 83%)"
@@ -173,6 +176,13 @@ export const Header = ({ activeHeading }) => {
                 {
                   openCart ? (
                     <Cart setOpenCart={setOpenCart}/>
+                  ): null
+                }
+
+                {/*  WishList Popup */}
+                {
+                  openWishlist ? (
+                    <Wishlist setOpenWishlist={setOpenWishlist}/> 
                   ): null
                 }
               </div>
