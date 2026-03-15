@@ -12,7 +12,8 @@ import {
     ProductsPage, 
     BestSellingPage, 
     EventsPage, 
-    FAQPage 
+    FAQPage ,
+    ProfilePage
 } from "./Routes.jsx";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 function App() {
@@ -35,6 +36,7 @@ function App() {
         <Route path="/events" element={<EventsPage />} />
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/product/:name" element={<ProductDetailsPage />} />
+        <Route path="/profile" element={<ProfilePage/>} />
       </Routes>
 
       <ToastContainer

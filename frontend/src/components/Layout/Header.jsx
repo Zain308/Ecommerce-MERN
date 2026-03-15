@@ -142,10 +142,9 @@ export const Header = ({ activeHeading }) => {
                     0
                   </span>
                 </div>
-
-                {/* Profile Avatar Logic */}
+                 {/* Profile Avatar Logic */}
                 <div className="relative cursor-pointer mr-[15px]">
-                  {isAuthenticated && user ? (
+                  {isAuthenticated ? ( // Ensure this variable comes from useSelector
                     <Link to="/profile">
                       <img 
                         src={`${backend_url}${user.avatar}`} 
@@ -160,7 +159,7 @@ export const Header = ({ activeHeading }) => {
                   )}
                 </div>
 
-                <div className="relative cursor-pointer mr-[15px]"
+                  <div className="relative cursor-pointer mr-[15px]"
                 onClick={()=>setOpenCart(true)}
                 >
                   <AiOutlineShoppingCart
