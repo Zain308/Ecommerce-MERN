@@ -12,15 +12,18 @@ import {
     ProductsPage, 
     BestSellingPage, 
     EventsPage, 
-    FAQPage ,
-    ProfilePage
+    FAQPage,
+    ProfilePage,
+    CheckoutPage,
+    ShopCreate
 } from "./Routes.jsx";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import { useSelector } from "react-redux";
-function App() {
 
-  const { isAuthenticated } = useSelector((state)=>state.user);
+function App() {
+  const { loading, isAuthenticated } = useSelector((state) => state.user);
+
   useEffect(() => {
     Store.dispatch(loadUser()); 
   }, []);
@@ -40,13 +43,27 @@ function App() {
         <Route path="/events" element={<EventsPage />} />
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/product/:name" element={<ProductDetailsPage />} />
+        
+        {/* Profile Route */}
         <Route 
           path="/profile" 
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute loading={loading} isAuthenticated={isAuthenticated}>
               <ProfilePage />
             </ProtectedRoute>
           } 
+        />
+
+        <Route path="/shop-create" element={<ShopCreate />} />
+
+        {/* Checkout Route */}
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute loading={loading} isAuthenticated={isAuthenticated}>
+              <CheckoutPage />
+            </ProtectedRoute>
+          }
         />
       </Routes>
 
