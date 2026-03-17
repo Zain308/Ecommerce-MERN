@@ -16,7 +16,11 @@ import {
     ProfilePage
 } from "./Routes.jsx";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
+import ProtectedRoute from "./ProtectedRoute.jsx";
+import { useSelector } from "react-redux";
 function App() {
+
+  const { isAuthenticated } = useSelector((state)=>state.user);
   useEffect(() => {
     Store.dispatch(loadUser()); 
   }, []);
@@ -36,7 +40,14 @@ function App() {
         <Route path="/events" element={<EventsPage />} />
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/product/:name" element={<ProductDetailsPage />} />
-        <Route path="/profile" element={<ProfilePage/>} />
+        <Route 
+          path="/profile" 
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProfilePage />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
 
       <ToastContainer
