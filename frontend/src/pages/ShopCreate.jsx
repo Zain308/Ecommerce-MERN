@@ -1,6 +1,7 @@
 import React from 'react'
-import '../components/Shop/ShopCreate.jsx'
-const ShopCreate = () => {
+import ShopCreate from '../components/Shop/ShopCreate'
+
+const ShopCreatePage = () => { 
   return (
     <div>
         <ShopCreate />
@@ -8,4 +9,4 @@ const ShopCreate = () => {
   )
 }
 
-export default ShopCreate
+export default ShopCreatePage

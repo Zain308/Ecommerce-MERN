@@ -15,7 +15,8 @@ import {
     FAQPage,
     ProfilePage,
     CheckoutPage,
-    ShopCreate
+    ShopCreatePage,
+    ShopLoginPage
 } from "./Routes.jsx";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ProtectedRoute from "./ProtectedRoute.jsx";
@@ -54,7 +55,8 @@ function App() {
           } 
         />
 
-        <Route path="/shop-create" element={<ShopCreate />} />
+        <Route path="/shop-create" element={<ShopCreatePage />} />
+        <Route path="/shop-login" element={<ShopLoginPage />} />
 
         {/* Checkout Route */}
         <Route
