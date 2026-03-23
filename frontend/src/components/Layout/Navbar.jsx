@@ -8,9 +8,9 @@ const Navbar = ({ active }) => {
     <div className={`block 800px:${styles.noramlFlex}`}>
         {
             navItems && navItems.map((i, index) => ( 
-                <div className='flex' key={index}> 
+                <div className='flex flex-col 800px:flex-row' key={index}> 
                     <Link to={i.url}
-                    className={`${active === index + 1 ? "text-[#17dd1f]" : "text-black 800px:text-[#fff]"} pb-[20px] font-[500] px-6 cursor-pointer `}
+                        className={`${active === index + 1 ? "text-[#17dd1f]" : "text-black 800px:text-[#fff]"} pb-[20px] 800px:pb-0 font-[500] px-6 cursor-pointer `}
                     >
                         {i.title}
                     </Link>
@@ -21,4 +21,4 @@ const Navbar = ({ active }) => {
   )
 }
 
-export default Navbar; 
+export default Navbar;

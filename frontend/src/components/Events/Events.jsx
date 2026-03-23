@@ -10,7 +10,7 @@ const Events = () => {
                 <h1>Popular Events</h1>
             </div>
             
-            <div className="w-full grid">
+            <div className="w-full grid mb-12">
                 <EventCard />
             </div>
         </div>

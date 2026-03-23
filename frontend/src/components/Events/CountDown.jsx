@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 
 const CountDown = () => {
   const calculateTimeLeft = () => {
-    const difference = +new Date("2026-03-15") - +new Date();
+    // BUG FIX: Updated date to future (May 2026) so timer doesn't start at "Time's up"
+    const difference = +new Date("2026-05-15") - +new Date();
     let timeLeft = {};
 
     if (difference > 0) {
@@ -26,22 +27,26 @@ const CountDown = () => {
   }, []);
 
   const timerComponents = Object.keys(timeLeft).map((interval) => {
+    if (!timeLeft[interval] && interval !== "seconds") {
+      return null;
+    }
+
     return (
-      <span key={interval} className="text-[25px] text-[#475ad2]">
+      <span key={interval} className="text-[25px] text-[#475ad2] font-[600]">
         {timeLeft[interval]} {interval}{" "}
       </span>
     );
   });
 
   return (
-    <div>
+    <div className="flex items-center gap-2">
       {timerComponents.length ? (
         timerComponents
       ) : (
-        <span className="text-[red] text-[25px]">Time's up!</span>
+        <span className="text-[red] text-[25px]">Event has ended!</span>
       )}
     </div>
   );
 };
 
-export default CountDown;
+export default CountDown; 

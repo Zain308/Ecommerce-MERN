@@ -30,9 +30,9 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.methods.getJwtToken = function () {
-    return jwt.sign({ id: this._id }, process.env.JWT_SECRET || process.env.ACTIVATION_SECRET, {
-        expiresIn: '7d',
-    });
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES || "7d",
+  });
 };
 
 userSchema.methods.comparePassword = async function (enteredPassword) {

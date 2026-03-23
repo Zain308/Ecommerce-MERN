@@ -1,10 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { userReducer } from "./reducers/user";
+import { sellerReducer } from "./reducers/seller";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    // cart: cartReducer,
+    seller:sellerReducer,
   },
 
   middleware: (getDefaultMiddleware) =>

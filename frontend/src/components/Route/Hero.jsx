@@ -5,13 +5,17 @@ import { Link } from "react-router-dom";
 export const Hero = () => {
   return (
     <div
-      className={`relative min-h-[70vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat ${styles.noramlFlex}`}
+      className={`relative min-h-[70vh] 800px:min-h-[80vh] w-full bg-cover bg-center bg-no-repeat flex items-center`}
       style={{
         backgroundImage:
           "url(https://themes.rslahmed.dev/rafcart/assets/images/banner-2.jpg)",
       }}
     >
-      <div className={`${styles.section} w-[90%] 800px:w-[60%]`}>
+      {/* FIX: Added a margin-top to clear the sticky header 
+         and removed the ${styles.noramlFlex} from the parent to avoid 
+         centering conflicts with the background image.
+      */}
+      <div className={`${styles.section} w-[90%] 800px:w-[60%] py-10`}>
         <h1
           className={`text-[35px] leading-[1.2] 800px:text-[60px] text-[#3d3a3a] font-[600] capitalize`}
         >
@@ -19,12 +23,12 @@ export const Hero = () => {
         </h1>
         <p className="pt-5 text-[16px] font-[Poppins] font-[400] text-[#000000ba]">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum, sint
-          veritatis? <br /> Odit amet autem, impedit perspiciatis provident
+          veritatis? <br className="hidden 800px:block" /> Odit amet autem, impedit perspiciatis provident
           accusantium vero quia laborum pariatur
-          <br /> assumenda praesentium atque beatae placeat, quod harum sunt?
+          <br className="hidden 800px:block" /> assumenda praesentium atque beatae placeat, quod harum sunt?
         </p>
         <Link to="/products" className="inline-block">
-            <div className={`${styles.button} mt-5`}>
+            <div className={`${styles.button} mt-5 !rounded-[4px]`}>
                 <span className="text-[#fff] font-[Poppins] text-[18px]">
                     Shop Now
                 </span>
@@ -34,3 +38,5 @@ export const Hero = () => {
     </div>
   );
 };
+
+export default Hero;

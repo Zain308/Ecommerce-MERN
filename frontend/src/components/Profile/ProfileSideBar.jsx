@@ -5,9 +5,10 @@ import { toast } from "react-toastify";
 import { AiOutlineCreditCard, AiOutlineLogin, AiOutlineMessage } from 'react-icons/ai';
 import { HiOutlineReceiptRefund, HiOutlineShoppingBag } from 'react-icons/hi';
 import { RxPerson } from 'react-icons/rx';
-import { useNavigate } from 'react-router-dom';
 import { MdOutlineTrackChanges } from "react-icons/md"
 import { TbAddressBook } from "react-icons/tb";
+import { useNavigate } from 'react-router-dom';
+
 const ProfileSideBar = ({ setActive, active }) => {
   const navigate = useNavigate();
 
@@ -15,13 +16,11 @@ const ProfileSideBar = ({ setActive, active }) => {
     axios.get(`${server}/user/logout`, { withCredentials: true })
       .then((res) => {
         toast.success(res.data.message);
+        // This clears the Redux state by triggering a fresh load on the login page
         window.location.reload(true);
-        navigate("/login");
       })
       .catch((error) => {
-        const message = error.response?.data?.message || "Logout failed";
-        console.log(message);
-        toast.error(message);
+        toast.error(error.response?.data?.message || "Logout failed");
       });
   };
 
@@ -52,8 +51,8 @@ const ProfileSideBar = ({ setActive, active }) => {
         </span>
       </div>
 
-      {/* Inbox - Navigates to a separate page */}
-      <div className="flex items-center cursor-pointer w-full mb-8" onClick={() => navigate("/inbox")}>
+      {/* Inbox */}
+      <div className="flex items-center cursor-pointer w-full mb-8" onClick={() => navigate("/inbox") || setActive(4)}>
         <AiOutlineMessage size={20} color={active === 4 ? "red" : "#333"} />
         <span className={`pl-3 ${active === 4 ? "text-[red]" : "text-[#333]"} font-[600] 800px:block hidden`}>
           Inbox
@@ -84,13 +83,10 @@ const ProfileSideBar = ({ setActive, active }) => {
         </span>
       </div>
 
-      {/* Log out item */}
-      <div 
-        className="flex items-center cursor-pointer w-full mb-8" 
-        onClick={logoutHandler}
-      >
-        <AiOutlineLogin size={20} color={active === 8 ? "red" : "#333"} />
-        <span className={`pl-3 ${active === 8 ? "text-[red]" : "text-[#333]"} font-[600] 800px:block hidden`}>
+      {/* Log out */}
+      <div className="flex items-center cursor-pointer w-full mb-8" onClick={logoutHandler}>
+        <AiOutlineLogin size={20} color={"#333"} />
+        <span className={`pl-3 text-[#333] font-[600] 800px:block hidden`}>
           Log out
         </span>
       </div>

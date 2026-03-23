@@ -19,7 +19,6 @@ const ProductDetails = ({ data }) => {
   };
 
   const handleMessageSubmit = () => {
-    // Logic to initiate a chat with the seller
     console.log("Message submitted");
   };
 
@@ -33,36 +32,31 @@ const ProductDetails = ({ data }) => {
               <div className="w-full 800px:w-[50%]">
                 <img
                   src={data?.image_Url?.[select]?.url}
-                  alt=""
-                  className="w-[80%] object-contain h-[400px]"
+                  alt={data.name}
+                  className="w-[80%] object-contain h-[400px] transition-opacity duration-300"
                 />
-                <div className="w-full flex mt-5">
-                  {data &&
-                    data.image_Url.map((i, index) => (
-                      <div
-                        key={index}
-                        className={`${
-                          select === index
-                            ? "border-[2px] border-[#3957db]"
-                            : ""
-                        } cursor-pointer mr-3 shadow-sm rounded-md overflow-hidden`}
-                        onClick={() => setSelect(index)}
-                      >
-                        <img
-                          src={i.url}
-                          alt=""
-                          className="h-[120px] w-[120px] object-contain p-2"
-                        />
-                      </div>
-                    ))}
+                <div className="w-full flex mt-5 overflow-x-auto">
+                  {data?.image_Url?.map((i, index) => (
+                    <div
+                      key={index}
+                      className={`${
+                        select === index ? "border-[2px] border-[#3957db]" : "border"
+                      } cursor-pointer mr-3 shadow-sm rounded-md overflow-hidden min-w-[120px]`}
+                      onClick={() => setSelect(index)}
+                    >
+                      <img
+                        src={i.url}
+                        alt=""
+                        className="h-[120px] w-full object-contain p-2 bg-white"
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
 
               {/* Right Side: Product Content */}
-              <div className="w-full 800px:w-[50%] pt-5">
-                <h1
-                  className={`${styles.productTitle} !text-[25px] font-[600] text-[#333]`}
-                >
+              <div className="w-full 800px:w-[50%] pt-5 px-5">
+                <h1 className={`${styles.productTitle} !text-[25px] font-[600] text-[#333]`}>
                   {data.name}
                 </h1>
                 <p className="text-[16px] text-[#444] leading-7 text-justify mt-3 font-Inter">
@@ -73,84 +67,68 @@ const ProductDetails = ({ data }) => {
                   <h4 className={`${styles.productDiscountPrice} !text-[22px]`}>
                     {data.discount_price}$
                   </h4>
-                  <h3 className={`${styles.price} pl-3 !text-[18px]`}>
-                    {data.price ? data.price + "$" : null}
-                  </h3>
+                  {data.price && (
+                    <h3 className={`${styles.price} pl-3 !text-[18px] line-through text-[#d55b45]`}>
+                      {data.price}$
+                    </h3>
+                  )}
                 </div>
 
-                {/* Quantity & Wishlist Buttons */}
+                {/* Controls */}
                 <div className="flex items-center mt-12 justify-between pr-3">
                   <div className="flex">
                     <button
-                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition active:scale-95"
+                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 active:scale-95 transition"
                       onClick={decrementCount}
                     >
                       -
                     </button>
-                    <span className="bg-gray-200 text-gray-800 font-medium px-4 py-[8px] flex items-center justify-center min-w-[40px]">
+                    <span className="bg-gray-200 text-gray-800 font-medium px-6 py-[8px] flex items-center justify-center">
                       {count}
                     </span>
                     <button
-                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-r px-4 py-2 shadow-lg hover:opacity-75 transition active:scale-95"
+                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-r px-4 py-2 shadow-lg hover:opacity-75 active:scale-95 transition"
                       onClick={incrementCount}
                     >
                       +
                     </button>
                   </div>
-                  <div>
+                  <div onClick={() => setClick(!click)} className="cursor-pointer">
                     {click ? (
-                      <AiFillHeart
-                        size={30}
-                        className="cursor-pointer"
-                        onClick={() => setClick(!click)}
-                        color="red"
-                        title="Remove from wishlist"
-                      />
+                      <AiFillHeart size={30} color="red" title="Remove from wishlist" />
                     ) : (
-                      <AiOutlineHeart
-                        size={30}
-                        className="cursor-pointer"
-                        onClick={() => setClick(!click)}
-                        color="#333"
-                        title="Add to wishlist"
-                      />
+                      <AiOutlineHeart size={30} color="#333" title="Add to wishlist" />
                     )}
                   </div>
                 </div>
 
-                {/* Add to Cart Button */}
-                <div
-                  className={`${styles.button} !mt-10 !rounded !h-11 flex items-center justify-center cursor-pointer !bg-[#000] hover:opacity-80 transition`}
-                >
+                {/* Add to Cart */}
+                <div className={`${styles.button} !mt-10 !rounded !h-11 flex items-center justify-center cursor-pointer !bg-[#000] hover:bg-gray-800 transition`}>
                   <span className="text-white flex items-center font-[600]">
                     Add to cart <AiOutlineShoppingCart className="ml-1" />
                   </span>
                 </div>
 
-                {/* NEW: Shop Info & Send Message Section */}
-                <div className="flex items-center justify-between pt-8">
+                {/* Shop Section */}
+                <div className="flex items-center justify-between pt-8 border-t mt-8">
                   <div className="flex items-center">
                     <Link to={`/shop/preview/${data?.shop?._id}`}>
                       <img
                         src={data?.shop?.shop_avatar?.url}
-                        alt=""
-                        className="w-[50px] h-[50px] rounded-full mr-2"
+                        alt={data?.shop?.name}
+                        className="w-[50px] h-[50px] rounded-full mr-2 object-cover border"
                       />
                     </Link>
                     <div>
                       <Link to={`/shop/preview/${data?.shop?._id}`}>
-                        <h3 className={`${styles.shop_name} pb-1 pt-1`}>
-                          {data?.shop?.name}
-                        </h3>
+                        <h3 className={`${styles.shop_name} pb-1 pt-1`}>{data?.shop?.name}</h3>
                       </Link>
-                      <h5 className="pb-3 text-[15px]">
-                        ({data?.shop?.ratings}) Ratings
-                      </h5>
+                      <h5 className="pb-3 text-[15px]">({data?.shop?.ratings}) Ratings</h5>
                     </div>
                   </div>
 
                   <div
-                    className={`${styles.button} !bg-[#6443d1] mt-4 !rounded !h-11 flex items-center justify-center px-4 cursor-pointer`}
+                    className={`${styles.button} !bg-[#6443d1] !mt-0 !rounded !h-11 flex items-center justify-center px-4 cursor-pointer`}
                     onClick={handleMessageSubmit}
                   >
                     <span className="text-white flex items-center font-[500]">
@@ -158,20 +136,18 @@ const ProductDetails = ({ data }) => {
                     </span>
                   </div>
                 </div>
-                {/* End Shop Section */}
               </div>
             </div>
           </div>
 
           <ProductDetailsInfo data={data} />
-          <br />
-          <br />
         </div>
       ) : null}
     </div>
   );
 };
 
+// ... (ProductDetailsInfo remains the same, ensure Shop avatar logic matches)
 const ProductDetailsInfo = ({ data }) => {
   const [active, setActive] = useState(1);
   return (

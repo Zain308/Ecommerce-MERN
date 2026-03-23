@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { loadUser } from "../redux/actions/user.js";
+import { loadSeller, loadUser } from "../redux/actions/user.js"; // Ensure paths are correct
 import Store from "../redux/store.js";
 import { 
     LoginPage, 
@@ -18,15 +18,21 @@ import {
     ShopCreatePage,
     ShopLoginPage
 } from "./Routes.jsx";
+import { ShopHomePage } from "./ShopRoutes.jsx";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ProtectedRoute from "./ProtectedRoute.jsx";
+import SellerProtectedRoute from "./SellerProtectedRoute.jsx";
 import { useSelector } from "react-redux";
 
 function App() {
+  // Extracting user and seller state
   const { loading, isAuthenticated } = useSelector((state) => state.user);
+  const { isSeller, isLoading } = useSelector((state) => state.seller);
 
   useEffect(() => {
+    // Initial data fetch
     Store.dispatch(loadUser()); 
+    Store.dispatch(loadSeller());
   }, []);
 
   return (
@@ -45,7 +51,7 @@ function App() {
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/product/:name" element={<ProductDetailsPage />} />
         
-        {/* Profile Route */}
+        {/* User Profile - Protected */}
         <Route 
           path="/profile" 
           element={
@@ -55,10 +61,21 @@ function App() {
           } 
         />
 
+        {/* Shop Authentication Routes */}
         <Route path="/shop-create" element={<ShopCreatePage />} />
         <Route path="/shop-login" element={<ShopLoginPage />} />
+        
+        {/* Protected Shop Home - FIX: Passed props for guard logic */}
+        <Route 
+          path="/shop/:id" 
+          element={
+            <SellerProtectedRoute isLoading={isLoading} isSeller={isSeller}>
+              <ShopHomePage />
+            </SellerProtectedRoute>
+          } 
+        />
 
-        {/* Checkout Route */}
+        {/* Checkout - Protected */}
         <Route
           path="/checkout"
           element={

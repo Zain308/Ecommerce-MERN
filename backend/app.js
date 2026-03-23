@@ -22,7 +22,7 @@ app.use(cors({
     credentials: true
 }));
 
-app.use("/", express.static('uploads')); 
+app.use("/", express.static(path.join(__dirname, "../uploads")));
 app.use(bodyparser.urlencoded({ extended: true, limit: "50mb" }));
 
 // 3. IMPORT ROUTES (Must happen AFTER dotenv)

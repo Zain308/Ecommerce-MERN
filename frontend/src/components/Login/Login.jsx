@@ -20,21 +20,17 @@ export default function Login() {
 
     await axios
       .post(
-        `${server}/user/login-user`, // This will now match the backend properly
+        `${server}/user/login-user`,
         { email, password },
         { withCredentials: true }
       )
       .then((res) => {
         toast.success("Login Success!");
-        dispatch(loadUser()); // This fetches the avatar and user info into Redux
-        navigate("/");
+        dispatch(loadUser()); 
+        navigate("/"); 
       })
       .catch((err) => {
-        if (err.response && err.response.data) {
-          toast.error(err.response.data.message);
-        } else {
-          toast.error("Server is not responding. Check your backend!");
-        }
+        toast.error(err.response?.data?.message || "Login failed. Please check your credentials.");
       });
   };
 
