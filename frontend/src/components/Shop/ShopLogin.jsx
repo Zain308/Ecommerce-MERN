@@ -15,14 +15,12 @@ const ShopLogin = () => {
 
   const { isSeller, isLoading } = useSelector((state) => state.seller);
 
-  // FIX: This useEffect is the "Redirect Guard"
-  // It watches for isSeller to become true and then kicks the user to the dashboard
   useEffect(() => {
     if (isSeller) {
       // Navigate to the dynamic shop ID if you have it, or just a generic dashboard
-      navigate(`/shop/:id`); 
+      navigate(`/dashboard`); 
     }
-  }, [isSeller, navigate]);
+  }, [isSeller, navigate,isLoading]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

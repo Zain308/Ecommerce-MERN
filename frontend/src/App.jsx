@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { loadSeller, loadUser } from "../redux/actions/user.js"; // Ensure paths are correct
+import { loadSeller, loadUser } from "../redux/actions/user.js"; 
 import Store from "../redux/store.js";
 import { 
     LoginPage, 
@@ -16,21 +16,18 @@ import {
     ProfilePage,
     CheckoutPage,
     ShopCreatePage,
-    ShopLoginPage
-} from "./Routes.jsx";
-import { ShopHomePage } from "./ShopRoutes.jsx";
+    ShopLoginPage,
+} from "./routes/Routes.jsx";
+
+import { ShopDashboardPage } from "./routes/ShopRoutes.jsx";
+import { ShopHomePage } from "./routes/ShopRoutes.jsx"; 
+
 import ProductDetailsPage from "./pages/ProductDetailsPage";
-import ProtectedRoute from "./ProtectedRoute.jsx";
-import SellerProtectedRoute from "./SellerProtectedRoute.jsx";
-import { useSelector } from "react-redux";
+import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import SellerProtectedRoute from "./routes/SellerProtectedRoute.jsx";
 
 function App() {
-  // Extracting user and seller state
-  const { loading, isAuthenticated } = useSelector((state) => state.user);
-  const { isSeller, isLoading } = useSelector((state) => state.seller);
-
   useEffect(() => {
-    // Initial data fetch
     Store.dispatch(loadUser()); 
     Store.dispatch(loadSeller());
   }, []);
@@ -51,35 +48,40 @@ function App() {
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/product/:name" element={<ProductDetailsPage />} />
         
-        {/* User Profile - Protected */}
         <Route 
           path="/profile" 
           element={
-            <ProtectedRoute loading={loading} isAuthenticated={isAuthenticated}>
+            <ProtectedRoute>
               <ProfilePage />
             </ProtectedRoute>
           } 
         />
 
-        {/* Shop Authentication Routes */}
         <Route path="/shop-create" element={<ShopCreatePage />} />
         <Route path="/shop-login" element={<ShopLoginPage />} />
         
-        {/* Protected Shop Home - FIX: Passed props for guard logic */}
         <Route 
           path="/shop/:id" 
           element={
-            <SellerProtectedRoute isLoading={isLoading} isSeller={isSeller}>
+            <SellerProtectedRoute>
               <ShopHomePage />
             </SellerProtectedRoute>
           } 
         />
 
-        {/* Checkout - Protected */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <SellerProtectedRoute>
+              <ShopDashboardPage />
+            </SellerProtectedRoute>
+          } 
+        />
+
         <Route
           path="/checkout"
           element={
-            <ProtectedRoute loading={loading} isAuthenticated={isAuthenticated}>
+            <ProtectedRoute>
               <CheckoutPage />
             </ProtectedRoute>
           }
@@ -89,13 +91,6 @@ function App() {
       <ToastContainer
         position="bottom-center"
         autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
         theme="light"
       />
     </BrowserRouter>
