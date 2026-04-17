@@ -1,7 +1,7 @@
 import LoginPage from "../pages/Login";
 import SignupPage from "../pages/Signup";
 import ActivationPage from "../pages/Activation.jsx";
-import {HomePage} from "../pages/HomePage.jsx";
+import { HomePage } from "../pages/HomePage.jsx";
 import ProductsPage from "../pages/ProductsPage.jsx";
 import BestSellingPage from "../pages/BestSellingPage.jsx";
 import EventsPage from "../pages/EventsPage.jsx";
@@ -10,6 +10,8 @@ import ProfilePage from "../pages/ProfilePage.jsx";
 import CheckoutPage from "../pages/CheckoutPage.jsx";
 import ShopCreatePage from "../pages/ShopCreate.jsx";
 import ShopLoginPage from "../pages/ShopLoginPage.jsx";
+import PaymentPage from "../pages/PaymentPage.jsx"; // New
+import OrderSuccessPage from "../pages/OrderSuccessPage.jsx"; // New
 
 export { 
     LoginPage, 
@@ -23,5 +25,7 @@ export {
     ProfilePage,
     CheckoutPage,
     ShopCreatePage,
-    ShopLoginPage
+    ShopLoginPage,
+    PaymentPage, // Exported
+    OrderSuccessPage // Exported
 };

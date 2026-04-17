@@ -17,9 +17,11 @@ import {
     CheckoutPage,
     ShopCreatePage,
     ShopLoginPage,
+    PaymentPage, 
+    OrderSuccessPage, 
 } from "./routes/Routes.jsx";
 
-import { ShopDashboardPage } from "./routes/ShopRoutes.jsx";
+import { ShopDashboardPage,ShopCreateProduct } from "./routes/ShopRoutes.jsx";
 import { ShopHomePage } from "./routes/ShopRoutes.jsx"; 
 
 import ProductDetailsPage from "./pages/ProductDetailsPage";
@@ -48,6 +50,7 @@ function App() {
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/product/:name" element={<ProductDetailsPage />} />
         
+        {/* User Profile */}
         <Route 
           path="/profile" 
           element={
@@ -55,6 +58,22 @@ function App() {
               <ProfilePage />
             </ProtectedRoute>
           } 
+        />
+
+        {/* New Payment Route */}
+        <Route 
+          path="/payment" 
+          element={
+            <ProtectedRoute>
+              <PaymentPage />
+            </ProtectedRoute>
+          } 
+        />
+
+        {/* New Order Success Route */}
+        <Route 
+          path="/order/success" 
+          element={<OrderSuccessPage />} 
         />
 
         <Route path="/shop-create" element={<ShopCreatePage />} />
@@ -74,6 +93,14 @@ function App() {
           element={
             <SellerProtectedRoute>
               <ShopDashboardPage />
+            </SellerProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard-create-product" 
+          element={
+            <SellerProtectedRoute>
+              <ShopCreateProduct />
             </SellerProtectedRoute>
           } 
         />

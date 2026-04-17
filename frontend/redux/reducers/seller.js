@@ -1,8 +1,8 @@
 import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
-  isSeller: false,      // Changed from isAuthenticated
-  isLoading: true,     // Initial state as true to prevent route flickering
+  isSeller: false,     
+  isLoading: true,     
 };
 
 export const sellerReducer = createReducer(initialState, (builder) => {
@@ -11,9 +11,9 @@ export const sellerReducer = createReducer(initialState, (builder) => {
       state.isLoading = true;
     })
     .addCase("LoadSellerSuccess", (state, action) => {
-      state.isSeller = true;      // Consistent with App.jsx
+      state.isSeller = true;      
       state.isLoading = false;
-      state.seller = action.payload; // Use lowercase 'seller'
+      state.seller = action.payload; 
     })
     .addCase("LoadSellerFail", (state, action) => {
       state.isLoading = false;
