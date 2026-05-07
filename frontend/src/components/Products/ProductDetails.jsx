@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProductsShop } from "../../../redux/actions/product";
 import {
   AiFillHeart,
   AiOutlineHeart,
@@ -7,11 +9,23 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import styles from "../../styles/styles";
+import { backend_url } from "../../server";
 
 const ProductDetails = ({ data }) => {
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
+  
+  const navigate = useNavigate();
+  const { products } = useSelector((state) => state.products);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+
+    if (data && data.shop && data.shop._id) {
+      dispatch(getAllProductsShop(data.shop._id));
+    }
+  }, [dispatch, data]);
 
   const incrementCount = () => setCount(count + 1);
   const decrementCount = () => {
@@ -19,7 +33,8 @@ const ProductDetails = ({ data }) => {
   };
 
   const handleMessageSubmit = () => {
-    console.log("Message submitted");
+    // NEW: Updated to match the video's navigate path
+    navigate("/inbox?conversation=507ebjver884ehfdjeriv84");
   };
 
   return (
@@ -28,15 +43,16 @@ const ProductDetails = ({ data }) => {
         <div className={`${styles.section} w-[90%] 800px:w-[80%] pb-10`}>
           <div className="w-full py-5">
             <div className="block w-full 800px:flex">
-              {/* Left Side: Images */}
+             {/* Left Side: Images */}
               <div className="w-full 800px:w-[50%]">
                 <img
-                  src={data?.image_Url?.[select]?.url}
-                  alt={data.name}
+                  src={data?.image_Url ? data.image_Url[select]?.url : `${backend_url}${data?.images?.[select]}`}
+                  alt={data?.name}
                   className="w-[80%] object-contain h-[400px] transition-opacity duration-300"
                 />
                 <div className="w-full flex mt-5 overflow-x-auto">
-                  {data?.image_Url?.map((i, index) => (
+                  {/* Map over whichever image array actually exists */}
+                  {(data?.image_Url || data?.images || []).map((i, index) => (
                     <div
                       key={index}
                       className={`${
@@ -45,7 +61,7 @@ const ProductDetails = ({ data }) => {
                       onClick={() => setSelect(index)}
                     >
                       <img
-                        src={i.url}
+                        src={data?.image_Url ? i.url : `${backend_url}${i}`}
                         alt=""
                         className="h-[120px] w-full object-contain p-2 bg-white"
                       />
@@ -65,11 +81,11 @@ const ProductDetails = ({ data }) => {
 
                 <div className="flex pt-5 items-center">
                   <h4 className={`${styles.productDiscountPrice} !text-[22px]`}>
-                    {data.discount_price}$
+                    {data.discountPrice}$
                   </h4>
-                  {data.price && (
+                  {data.originalPrice && (
                     <h3 className={`${styles.price} pl-3 !text-[18px] line-through text-[#d55b45]`}>
-                      {data.price}$
+                      {data.originalPrice}$
                     </h3>
                   )}
                 </div>
@@ -114,7 +130,7 @@ const ProductDetails = ({ data }) => {
                   <div className="flex items-center">
                     <Link to={`/shop/preview/${data?.shop?._id}`}>
                       <img
-                        src={data?.shop?.shop_avatar?.url}
+                        src={`${backend_url}${data?.shop?.avatar}`}
                         alt={data?.shop?.name}
                         className="w-[50px] h-[50px] rounded-full mr-2 object-cover border"
                       />
@@ -123,7 +139,7 @@ const ProductDetails = ({ data }) => {
                       <Link to={`/shop/preview/${data?.shop?._id}`}>
                         <h3 className={`${styles.shop_name} pb-1 pt-1`}>{data?.shop?.name}</h3>
                       </Link>
-                      <h5 className="pb-3 text-[15px]">({data?.shop?.ratings}) Ratings</h5>
+                      <h5 className="pb-3 text-[15px]">({data?.shop?.ratings || 0}) Ratings</h5>
                     </div>
                   </div>
 
@@ -140,15 +156,15 @@ const ProductDetails = ({ data }) => {
             </div>
           </div>
 
-          <ProductDetailsInfo data={data} />
+          {/* NEW: Pass the fetched 'products' array to the bottom section so it knows the total count */}
+          <ProductDetailsInfo data={data} products={products} />
         </div>
       ) : null}
     </div>
   );
 };
 
-// ... (ProductDetailsInfo remains the same, ensure Shop avatar logic matches)
-const ProductDetailsInfo = ({ data }) => {
+const ProductDetailsInfo = ({ data, products }) => {
   const [active, setActive] = useState(1);
   return (
     <div className="bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded ">
@@ -162,7 +178,6 @@ const ProductDetailsInfo = ({ data }) => {
           >
             Product Details
           </h5>
-
           {active === 1 ? (
             <div className={`${styles.active_indicator}`} />
           ) : null}
@@ -176,7 +191,6 @@ const ProductDetailsInfo = ({ data }) => {
           >
             Product Reviews
           </h5>
-
           {active === 2 ? (
             <div className={`${styles.active_indicator}`} />
           ) : null}
@@ -190,7 +204,6 @@ const ProductDetailsInfo = ({ data }) => {
           >
             Seller Information
           </h5>
-
           {active === 3 ? (
             <div className={`${styles.active_indicator}`} />
           ) : null}
@@ -200,26 +213,7 @@ const ProductDetailsInfo = ({ data }) => {
       {active === 1 ? (
         <>
           <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
-            Product details are a crucial part of any eCommerce website or
-            online marketplace. These details help the potential customers to
-            make an informed decision about the product they are interested in
-            buying. A well-written product description can also be a powerful
-            marketing tool that can help to increase sales. Product details
-            typically include information about the product's features,
-            specifications, dimensions, weight, materials, and other relevant
-            information that can help language, and be honest and transparent
-            about the product's features and limitations.
-          </p>
-
-          <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
-            customers to understand the product better. The product details
-            section should also include high-quality images and videos of the
-            product, as well as customer reviews and ratings. When writing
-            product details, it is essential to keep the target audience in
-            mind. The language used should be clear and easy to understand, and
-            technical terms should be explained in simple language. The tone of
-            the product details should be persuasive, highlighting the unique
-            features of the
+            {data.description}
           </p>
         </>
       ) : null}
@@ -235,38 +229,35 @@ const ProductDetailsInfo = ({ data }) => {
           <div className="w-full 800px:w-[50%]">
             <div className="flex items-center">
               <img
-                src={data.shop.shop_avatar.url}
+                src={`${backend_url}${data?.shop?.avatar}`}
                 className="w-[50px] h-[50px] rounded-full"
                 alt=""
               />
-
               <div className="pl-3">
-                <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
+                <h3 className={`${styles.shop_name}`}>{data?.shop?.name}</h3>
                 <h5 className="pb-2 text-[15px]">
-                  ({data.shop.ratings}) Ratings
+                  ({data?.shop?.ratings || 0}) Ratings
                 </h5>
               </div>
             </div>
-              <p>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Tenetur doloribus aliquam magni fuga commodi unde architecto
-                possimus non hic impedit corrupti nihil dolorum quis cumque
-                facere, temporibus neque, quibusdam dolor.
+              <p className="pt-2">
+                {data?.shop?.description}
               </p>
           </div>
 
           <div className="w-full 800px:w-[50%] mt-5 800px:mt-0 800px:flex flex-col items-end">
               <div className="text-left">
                 <h5 className="font-[600]">
-                  Joined on: <span className="font-[500]">@15 March 2026</span>
+                  Joined on: <span className="font-[500]">{data?.shop?.createdAt?.slice(0, 10)}</span>
                 </h5>
                 <h5 className="font-[600] pt-3">
-                  Total Products: <span className="font-[500]">1233</span>
+                  {/* NEW: Use the actual length of the products array we just fetched from Redux! */}
+                  Total Products: <span className="font-[500]">{products && products.length}</span>
                 </h5>
                 <h5 className="font-[600] pt-3">
-                  Total Reviews: <span className="font-[500]">234</span>
+                  Total Reviews: <span className="font-[500]">0</span>
                 </h5>
-                <Link to="/">
+                <Link to={`/shop/preview/${data?.shop?._id}`}>
                   <div className={`${styles.button} rounded-[4px] h-[39.5px] mt-3`}>
                       <h4 className="text-white">Visit Shop</h4>
                   </div>

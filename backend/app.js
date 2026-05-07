@@ -28,10 +28,16 @@ app.use(bodyparser.urlencoded({ extended: true, limit: "50mb" }));
 // 3. IMPORT ROUTES (Must happen AFTER dotenv)
 const user = require('./controller/user');
 const shop = require('./controller/shop');
+const product = require('./controller/product');
+const event = require("./controller/event");
+const coupon = require("./controller/couponCode");
 
 // 4. USE ROUTES
 app.use('/api/v1/user', user);
 app.use('/api/v1/shop', shop);
+app.use('/api/v1/product', product);
+app.use('/api/v1/event', event);
+app.use('/api/v1/coupon',coupon)
 
 app.use(errorMiddleware); 
 

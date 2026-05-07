@@ -1,19 +1,24 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { userReducer } from "./reducers/user";
 import { sellerReducer } from "./reducers/seller";
+import { productReducer } from "./reducers/product";
+import { eventReducer } from "./reducers/event";
+import { cartReducer } from "./reducers/cart"; 
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    seller:sellerReducer,
+    seller: sellerReducer,
+    products: productReducer,
+    events: eventReducer,
+    cart: cartReducer, 
   },
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // Keep this false if you are passing Dates/Files through state
+      serializableCheck: false, 
     }),
 
-  // Fixed for Vite: Use import.meta.env instead of process.env
   devTools: import.meta.env.DEV, 
 });
 

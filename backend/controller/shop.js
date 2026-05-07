@@ -5,10 +5,13 @@ const { upload } = require("../multer");
 const Shop = require("../model/shop");
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const sendShopToken = require("../utils/shopToken"); 
+const sendShopToken = require("../utils/shopToken");
 const { isSeller } = require("../middleware/auth");
 
-router.post("/create-shop", upload.single("file"), catchAsyncErrors(async (req, res, next) => {
+router.post(
+  "/create-shop",
+  upload.single("file"),
+  catchAsyncErrors(async (req, res, next) => {
     try {
       const { name, email, password, address, phoneNumber, zipCode } = req.body;
 
@@ -37,38 +40,40 @@ router.post("/create-shop", upload.single("file"), catchAsyncErrors(async (req, 
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
-  })
+  }),
 );
 
 // Login shop
 
-router.post("/login-shop", catchAsyncErrors(async (req, res, next) => {
+router.post(
+  "/login-shop",
+  catchAsyncErrors(async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+      const { email, password } = req.body;
 
-        if (!email || !password) {
-            return next(new ErrorHandler('Please provide email and password', 400));
-        }
+      if (!email || !password) {
+        return next(new ErrorHandler("Please provide email and password", 400));
+      }
 
-        const seller = await Shop.findOne({ email }).select("+password");
+      const seller = await Shop.findOne({ email }).select("+password");
 
-        if (!seller) {
-            return next(new ErrorHandler('Seller not found', 404)); // Changed 'User' to 'Seller'
-        }
+      if (!seller) {
+        return next(new ErrorHandler("Seller not found", 404)); // Changed 'User' to 'Seller'
+      }
 
-        const isPasswordMatched = await seller.comparePassword(password);
+      const isPasswordMatched = await seller.comparePassword(password);
 
-        if (!isPasswordMatched) {
-            return next(new ErrorHandler('Invalid email or password', 401));
-        }
+      if (!isPasswordMatched) {
+        return next(new ErrorHandler("Invalid email or password", 401));
+      }
 
-        // Use the Shop-specific token utility
-        sendShopToken(seller, 201, res);
-        
+      // Use the Shop-specific token utility
+      sendShopToken(seller, 201, res);
     } catch (error) {
-        return next(new ErrorHandler(error.message, 500));
+      return next(new ErrorHandler(error.message, 500));
     }
-}));
+  }),
+);
 
 router.get(
   "/getSeller",
@@ -88,7 +93,7 @@ router.get(
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
-  })
+  }),
 );
 
 // Logout Shop
@@ -109,6 +114,22 @@ router.get(
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
-  })
+  }),
+);
+
+//get shop info
+router.get(
+  "/get-shop-info/:id",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const shop = await Shop.findById(req.params.id);
+      res.status(201).json({
+        success: true,
+        shop,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }),
 );
 module.exports = router;

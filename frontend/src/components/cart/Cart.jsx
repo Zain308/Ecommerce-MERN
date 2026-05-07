@@ -82,8 +82,9 @@ const CartSingle = ({ data }) => {
             </div>
           </div>
 
+          {/* FIX: Dynamic Image rendering (Handles both Dummy and Real data) */}
           <img
-            src="https://bonik-react.vercel.app/assets/images/products/Fashion/Clothes/1.SilverHighNeckSweater.png"
+            src={data?.image_Url ? data.image_Url[0]?.url : `${backend_url}${data?.images?.[0]}`}
             alt=""
             className="w-[80px] h-[80px] ml-2 object-contain"
           />

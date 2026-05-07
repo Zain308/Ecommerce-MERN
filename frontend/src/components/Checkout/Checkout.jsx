@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import styles from "../../styles/styles";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // Make sure to import toast!
 
 const Checkout = () => {
   const { user } = useSelector((state) => state.user);
+  // 1. Pull the dynamic cart from Redux
+  const { cart } = useSelector((state) => state.cart);
+  
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [userInfo, setUserInfo] = useState(false);
@@ -13,8 +17,39 @@ const Checkout = () => {
   const [zipCode, setZipCode] = useState(null);
   const navigate = useNavigate();
 
+  // 2. Dynamic Math Calculations
+  const subTotalPrice = cart.reduce((acc, item) => acc + item.qty * item.discountPrice, 0);
+  const shipping = (subTotalPrice * 0.1).toFixed(2); // 10% shipping fee
+  const discountPercentenge = 0; // You will wire up coupons later!
+  const totalPrice = (subTotalPrice + Number(shipping) - discountPercentenge).toFixed(2);
+
   const paymentSubmit = () => {
-    navigate("/payment");
+    // 3. Prevent user from skipping the address form
+    if(address1 === "" || city === "" || country === "" || zipCode === null){
+        toast.error("Please choose your delivery address!");
+    } else {
+        const shippingAddress = {
+            address1,
+            address2,
+            zipCode,
+            country,
+            city,
+        };
+
+        const orderData = {
+            cart,
+            totalPrice,
+            subTotalPrice,
+            shipping,
+            discountPrice: discountPercentenge,
+            shippingAddress,
+            user,
+        }
+
+        // 4. Save to LocalStorage so the Payment Page knows what to charge!
+        localStorage.setItem("latestOrder", JSON.stringify(orderData));
+        navigate("/payment");
+    }
   };
 
   return (
@@ -38,7 +73,12 @@ const Checkout = () => {
           />
         </div>
         <div className="w-full 800px:w-[35%] 800px:mt-0 mt-8">
-          <CartData paymentSubmit={paymentSubmit} />
+          <CartData 
+            paymentSubmit={paymentSubmit} 
+            totalPrice={totalPrice}
+            shipping={shipping}
+            subTotalPrice={subTotalPrice}
+          />
         </div>
       </div>
     </div>
@@ -92,6 +132,7 @@ const ShippingInfo = ({
             <input
               type="number"
               required
+              value={user && user.phoneNumber}
               className={`${styles.input} !w-[95%]`}
             />
           </div>
@@ -159,24 +200,27 @@ const ShippingInfo = ({
   );
 };
 
-const CartData = ({ paymentSubmit }) => {
+const CartData = ({ paymentSubmit, totalPrice, shipping, subTotalPrice }) => {
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
       <div className="flex justify-between">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">subtotal:</h3>
-        <h5 className="text-[18px] font-[600]">$120.00</h5>
+        {/* Render dynamic subtotal */}
+        <h5 className="text-[18px] font-[600]">${subTotalPrice}</h5>
       </div>
       <br />
       <div className="flex justify-between">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">shipping:</h3>
-        <h5 className="text-[18px] font-[600]">$10.00</h5>
+        {/* Render dynamic shipping */}
+        <h5 className="text-[18px] font-[600]">${shipping}</h5>
       </div>
       <br />
       <div className="flex justify-between border-b pb-3">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">Discount:</h3>
         <h5 className="text-[18px] font-[600]">-</h5>
       </div>
-      <h5 className="text-[18px] font-[600] text-end pt-3">$130.00</h5>
+      {/* Render dynamic total price */}
+      <h5 className="text-[18px] font-[600] text-end pt-3">${totalPrice}</h5>
       <br />
       <button
         className={`${styles.button} !w-full !rounded-[5px]`}

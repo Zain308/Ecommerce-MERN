@@ -5,15 +5,17 @@ import { Header } from "../components/Layout/Header";
 import ProductDetails from "../components/Products/ProductDetails";
 import { productData } from "../static/data";
 import SuggestedProduct from "../components/Products/SuggestedProduct.jsx";
+import { useSelector } from "react-redux";
 
 const ProductDetailsPage = () => {
+  const {allProducts} = useSelector((state)=>state.products);
   const { name } = useParams();
   const [data, setData] = useState(null);
 
   useEffect(() => {
     // FIX: Optimized string matching (case-insensitive)
     const productName = name.replace(/-/g, " ");
-    const product = productData.find((i) => i.name.toLowerCase() === productName.toLowerCase());
+    const product = allProducts.find((i) => i.name.toLowerCase() === productName.toLowerCase());
     setData(product);
 
     // FIX: Scroll to top whenever the product changes
