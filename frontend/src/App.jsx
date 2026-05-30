@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,6 +19,9 @@ import {
   ShopLoginPage,
   PaymentPage,
   OrderSuccessPage,
+  OrderDetailsPage,
+  TrackOrderPage,
+  UserInbox
 } from "./routes/Routes.jsx";
 
 import {
@@ -29,21 +32,57 @@ import {
   ShopAllEvents,
   ShopAllCoupons,
   ShopPreviewPage,
+  ShopAllOrders,
+  ShopOrderDetails,
+  ShopAllRefunds,
+  ShopSettingsPage,
+  ShopWithDrawMoneyPage,
+  ShopInboxPage, 
 } from "./routes/ShopRoutes.jsx";
 import { ShopHomePage } from "./routes/ShopRoutes.jsx";
 
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute.jsx";
+import axios from "axios";
+import { server } from "./server.jsx";
+import {loadStripe} from "@stripe/stripe-js";
+import {Elements} from "@stripe/react-stripe-js"
 
 function App() {
+  const [stripeApikey,setStripeApikey] = useState("");
+
+  async function getStripeApikey(){
+    const {data} = await axios.get(`${server}/payment/stripeapikey`);
+    setStripeApikey(data.stripeApikey);
+  }
+
   useEffect(() => {
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());
+    Store.dispatch(getAllProducts());
+    Store.dispatch(getAllEvents());
+    getStripeApikey();
   }, []);
 
   return (
     <BrowserRouter>
+    {
+      stripeApikey && (
+        <Elements stripe={loadStripe(stripeApikey)}>
+          <Routes>
+          <Route
+          path="/payment"
+          element={
+            <ProtectedRoute>
+              <PaymentPage />
+            </ProtectedRoute>
+          }
+        />
+          </Routes>
+        </Elements>
+      )
+    }
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -56,7 +95,7 @@ function App() {
         <Route path="/best-selling" element={<BestSellingPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/faq" element={<FAQPage />} />
-        <Route path="/product/:name" element={<ProductDetailsPage />} />
+        <Route path="/product/:id" element={<ProductDetailsPage />} />
 
         {/* User Profile */}
         <Route
@@ -67,16 +106,32 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* New Payment Route */}
         <Route
-          path="/payment"
+          path="/inbox"
           element={
             <ProtectedRoute>
-              <PaymentPage />
+              <UserInbox />
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/user/order/:id"
+          element={
+            <ProtectedRoute>
+              <OrderDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/track/order/:id"
+          element={
+            <ProtectedRoute>
+              <TrackOrderPage />
+            </ProtectedRoute>
+          }
+        />
+
+        
 
         {/* New Order Success Route */}
         <Route path="/order/success" element={<OrderSuccessPage />} />
@@ -94,6 +149,15 @@ function App() {
         />
 
         <Route
+          path="/settings"
+          element={
+            <SellerProtectedRoute>
+              <ShopSettingsPage />
+            </SellerProtectedRoute>
+          }
+        />
+
+        <Route
           path="/dashboard"
           element={
             <SellerProtectedRoute>
@@ -106,6 +170,30 @@ function App() {
           element={
             <SellerProtectedRoute>
               <ShopCreateProduct />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard-orders"
+          element={
+            <SellerProtectedRoute>
+              <ShopAllOrders />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard-refunds"
+          element={
+            <SellerProtectedRoute>
+              <ShopAllRefunds />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/order/:id"
+          element={
+            <SellerProtectedRoute>
+              <ShopOrderDetails />
             </SellerProtectedRoute>
           }
         />
@@ -141,6 +229,22 @@ function App() {
             </SellerProtectedRoute>
           }
         />
+        <Route
+          path="/dashboard-withdraw-money"
+          element={
+            <SellerProtectedRoute>
+              <ShopWithDrawMoneyPage />
+            </SellerProtectedRoute>
+          }
+        />
+
+        <Route path="/dashboard-messages"
+        element={
+          <SellerProtectedRoute>
+            <ShopInboxPage />
+          </SellerProtectedRoute>
+        }/>
+
         <Route 
           path="/shop/preview/:id"
           element={<ShopPreviewPage />} 

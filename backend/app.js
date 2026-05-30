@@ -31,13 +31,21 @@ const shop = require('./controller/shop');
 const product = require('./controller/product');
 const event = require("./controller/event");
 const coupon = require("./controller/couponCode");
+const payment = require("./controller/payment");
+const order = require("./controller/order");
+const conversation = require("./controller/conversation");
+const message = require("./controller/message");
 
 // 4. USE ROUTES
 app.use('/api/v1/user', user);
+app.use('/api/v1/conversation', conversation); 
+app.use('/api/v1/message', message); 
+app.use('/api/v1/order', order);
 app.use('/api/v1/shop', shop);
 app.use('/api/v1/product', product);
 app.use('/api/v1/event', event);
 app.use('/api/v1/coupon',coupon)
+app.use('/api/v1/payment',payment)
 
 app.use(errorMiddleware); 
 

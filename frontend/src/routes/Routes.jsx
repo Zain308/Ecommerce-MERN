@@ -12,6 +12,9 @@ import ShopCreatePage from "../pages/ShopCreate.jsx";
 import ShopLoginPage from "../pages/ShopLoginPage.jsx";
 import PaymentPage from "../pages/PaymentPage.jsx"; // New
 import OrderSuccessPage from "../pages/OrderSuccessPage.jsx"; // New
+import OrderDetailsPage from "../pages/OrderDetailsPage.jsx"; // New
+import TrackOrderPage from "../pages/TrackOrderPage.jsx"; // New
+import UserInbox from "../pages/UserInbox.jsx"; // New
 
 export { 
     LoginPage, 
@@ -26,6 +29,9 @@ export {
     CheckoutPage,
     ShopCreatePage,
     ShopLoginPage,
-    PaymentPage, // Exported
-    OrderSuccessPage // Exported
+    PaymentPage, 
+    OrderSuccessPage, 
+    OrderDetailsPage,
+    TrackOrderPage,
+    UserInbox
 };

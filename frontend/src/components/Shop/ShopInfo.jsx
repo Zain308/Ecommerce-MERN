@@ -5,15 +5,20 @@ import styles from '../../styles/styles';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Loader from '../Layout/Loader'; 
+import { getAllProductsShop } from '../../../redux/actions/product';
 
 const ShopInfo = ({ isOwner }) => {
   const [data, setData] = useState({});
+  const {products} = useSelector((state)=>state.products);
   const [isLoading, setIsLoading] = useState(false);
   
   const { seller } = useSelector((state) => state.seller); 
   const { id } = useParams();
 
+  const dispatch = useDispatch();
+  
   useEffect(() => {
+    dispatch(getAllProductsShop(id));
     if (!isOwner) { 
       setIsLoading(true);
       axios.get(`${server}/shop/get-shop-info/${id}`)
@@ -33,6 +38,26 @@ const ShopInfo = ({ isOwner }) => {
     });
     window.location.reload();
   };
+
+  const totalReviewsLength =
+    products &&
+    products.reduce((acc, product) => acc + (product.reviews?.length || 0), 0);
+
+  // FIXED: Added initial value '0' to the outer reduce to prevent crashes on empty arrays
+  const totalRatings =
+    products &&
+    products.reduce(
+      (acc, product) =>
+        acc +
+        (product.reviews?.reduce((sum, review) => sum + review.rating, 0) || 0),
+      0
+    );
+
+  // FIXED: Prevented NaN if totalReviewsLength is 0 and rounded to 1 decimal place
+  const averageRating =
+    totalReviewsLength > 0
+      ? (totalRatings / totalReviewsLength).toFixed(1)
+      : 0;
 
   const shopData = isOwner ? seller : data;
 
@@ -67,11 +92,11 @@ const ShopInfo = ({ isOwner }) => {
       </div>
       <div className="p-3">
         <h5 className="font-[600]">Total Products</h5>
-        <h4 className='text-[#000000a6]'>10</h4>
+        <h4 className='text-[#000000a6]'>{products && products.length}</h4>
       </div>
       <div className="p-3">
         <h5 className="font-[600]">Shop Ratings</h5>
-        <h4 className='text-[#000000a6]'>4/5</h4>
+        <h4 className='text-[#000000a6]'>{averageRating}/5</h4>
       </div>
       <div className="p-3">
         <h5 className="font-[600]">Joined On</h5>
@@ -80,9 +105,11 @@ const ShopInfo = ({ isOwner }) => {
       </div>
       {isOwner && (
         <div className="py-3 px-4">
-          <div className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`}>
-            <span className='text-white'>Edit Shop</span>
-          </div>
+          <Link to="/settings">
+            <div className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`}>
+              <span className='text-white'>Edit Shop</span>
+            </div>
+          </Link>
           <div
             className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`}
             onClick={logoutHandler}

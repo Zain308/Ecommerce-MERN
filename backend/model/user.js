@@ -17,9 +17,40 @@ const userSchema = new mongoose.Schema({
         required: true,
         select: false, 
     },
+    phoneNumber: {
+        type:Number,
+    },
+    addresses:[
+        {
+            country:{
+                type:String,
+            },
+            city:{
+                type:String,
+            },
+            address1:{
+                type:String,
+            },
+            zipCode:{
+                type:Number,
+            },
+            addressType:{
+                type:String,
+            },
+        }
+    ],
+    role:{
+        type:String,
+    },
     avatar: {
         type: String,
-    }
+    },
+    createdAt:{
+        type:Date,
+        default:Date.now(),
+    },
+    resetPasswordToken:String,
+    resetPasswordTime:Date,
 });
 
 userSchema.pre('save', async function (next) {

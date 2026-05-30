@@ -20,6 +20,7 @@ import { RxCross1 } from "react-icons/rx";
 
 export const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
+  const { isSeller } = useSelector((state)=>state.seller);
   const { cart } = useSelector((state) => state.cart || { cart: [] }); 
   const { wishlist } = useSelector((state) => state.wishlist || { wishlist: [] });
   const [searchTerm, setSearchTerm] = useState("");
@@ -79,10 +80,8 @@ export const Header = ({ activeHeading }) => {
             {searchData && searchData.length !== 0 && (
               <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4 w-full left-0 border">
                 {searchData.map((i, index) => {
-                  const d = i.name;
-                  const Product_name = d.replace(/\s+/g, "-");
                   return (
-                    <Link to={`/product/${Product_name}`} key={index}>
+                    <Link to={`/product/${i._id}`} key={index}>
                       <div className="w-full flex items-start py-3 hover:bg-gray-100 px-2 transition">
                         <img src={i.image_Url[0].url} alt="" className="w-[40px] h-[40px] mr-[10px]" />
                         <h1 className="text-sm">{i.name}</h1>
@@ -95,9 +94,9 @@ export const Header = ({ activeHeading }) => {
           </div>
 
           <div className={`${styles.button}`}>
-            <Link to="/shop-create">
+            <Link to={`${isSeller ?  '/dashboard':'/shop-create'}`}>
               <h1 className="text-[#fff] flex items-center">
-                Become Seller <IoIosArrowForward className="ml-1" />
+                {isSeller ? "Go Dashboard" : "Become Seller"}  <IoIosArrowForward className="ml-1" />
               </h1>
             </Link>
           </div>

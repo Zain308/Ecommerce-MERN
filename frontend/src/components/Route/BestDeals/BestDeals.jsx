@@ -8,12 +8,12 @@ const BestDeals = () => {
   const { allProducts } = useSelector((state) => state.products);
 
   useEffect(() => {
-    if (allProducts) {
-      // FIX 2: Actually sort the products by most sold, then slice the top 5!
-      const sortedData = [...allProducts].sort((a, b) => b.sold_out - a.sold_out);
-      const firstFive = sortedData.slice(0, 5);
+    const allProductsData =allProducts? [...allProducts] : [];
+    const sortData = allProductsData?.sort((a,b)=>b.sold_out - a.sold_out)
+    
+      const firstFive = sortData.slice(0, 5);
       setData(firstFive);
-    }
+    
   }, [allProducts]);
 
   return (
